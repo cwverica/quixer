@@ -14,7 +14,7 @@ ingredients and doesn't know what type of drink to make.
 
 ### Steps to be completed:
 
-<sup>1</sup>~~This app will use cocktailsapi.xyz (credit: [jaunroldan1989](https://github.com/juanroldan1989/shaken_not_stirred)). I highly recommend 
+<sup>[1](#notes)</sup>~~This app will use cocktailsapi.xyz (credit: [jaunroldan1989](https://github.com/juanroldan1989/shaken_not_stirred)). I highly recommend 
 you support this project. It is a very well formatted stucture, and with enough support 
 may well become the standard cocktail database. I will have to become a member for full 
 access to the api.
@@ -32,7 +32,7 @@ able to "favorite" recipes, and even leave themselves notes about a recipes they
 
 The meat of the app is finding recipes. Users will be able to query based upon the 
 ingredients they have on hand, with a parameter of 'willing to purchase an additional 
-(0-3) ingredients.'<sup>2</sup> These ingredients will be highlighted when the person views the recipe.
+(0-3) ingredients.'<sup>[2](#notes)</sup> These ingredients will be highlighted when the person views the recipe.
 
 There will be additional logic to add preferences (would prefer a whiskey drink, avoid a 
 vodka drink, no citrus, etc.)
@@ -50,7 +50,9 @@ Stretch goals might include:
 - search history (per user)
 
 ---
-<sup>1</sup> ***NOTE:*** I have actually signed up to [thecocktaildb](https://www.thecocktaildb.com/) instead. 
+
+## Notes
+<sup>1</sup> I have actually signed up to [thecocktaildb](https://www.thecocktaildb.com/) instead. 
 In cocktailsapi.xyz the formatting is a little more consistent, seeing as recipes are only allowed to be entered by the creator or highest tier subscribers, while anyone can submit to thecocktaildb. However, thecocktaildb provides the ingredients and their measurements all as separate fields in the response, which will be helpful to organizing the data in a way most useful to me.
 
 
