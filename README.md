@@ -5,19 +5,20 @@
 This app allows a user to input a list of ingredients and tools they have on hand,
 and comes back with recipes for drinks that they could create.
 
-This app is really for adults only. Children could use it for some non-alcoholic drinks,
-but the main point is to make delicious cocktails. It is designed for anyone who has a 
+This app is really for adults only. It is designed for anyone who has a 
 limited supply on hand of spirits and ingredients, or someone who has plenty of 
-ingredients and doesn't know what type of drink to make.
+ingredients and doesn't know what type of drink to make. While the main focus
+will be on the average user, the ultimate goal will be an app for cocktail 
+lovers and afficionados who want to explore the unknown.
 
 ---
 
 ### Steps to be completed:
 
-<sup>[1](#notes)</sup>~~This app will use cocktailsapi.xyz (credit: [jaunroldan1989](https://github.com/juanroldan1989/shaken_not_stirred)). I highly recommend 
-you support this project. It is a very well formatted stucture, and with enough support 
-may well become the standard cocktail database. I will have to become a member for full 
-access to the api.
+I have actually signed up to [thecocktaildb](https://www.thecocktaildb.com/). 
+Thecocktaildb provides the ingredients and their measurements all as separate fields
+in the response, which will be helpful to organizing the data in a way most useful to me.
+I had to become a patreon supporter for full access to the api.
 
 I will have to set-up a database for users. Retained information will be:
 - the tools they have on hand 
@@ -37,7 +38,7 @@ ingredients they have on hand, with a parameter of 'willing to purchase an addit
 There will be additional logic to add preferences (would prefer a whiskey drink, avoid a 
 vodka drink, no citrus, etc.)
 
-There will be a sign up which will include onboarding familiarizing them with their 
+<sup>[2](#notes)</sup> There will be a sign up which will include onboarding familiarizing them with their 
 ingredients and tools pages while filling them out for the first time, then take them 
 to the search page. After the first search, there would be an option for tips (like 
 how to favorite, leave notes, share (if implemented), etc.).
@@ -52,8 +53,5 @@ Stretch goals might include:
 ---
 
 ## Notes
-<sup>1</sup> I have actually signed up to [thecocktaildb](https://www.thecocktaildb.com/) instead. 
-In cocktailsapi.xyz the formatting is a little more consistent, seeing as recipes are only allowed to be entered by the creator or highest tier subscribers, while anyone can submit to thecocktaildb. However, thecocktaildb provides the ingredients and their measurements all as separate fields in the response, which will be helpful to organizing the data in a way most useful to me.
-
 
 <sup>2</sup> This is also a stretch goal. It is something I really want to implement, but may not be feasible. Goal for initial release is viability, if this cannot be achieved now, it will be a feature in a future release
