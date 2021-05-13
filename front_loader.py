@@ -9,10 +9,6 @@ db.drop_all()
 db.create_all()
 
 
-# print('*' * 50)
-# print(len(drinks))
-# print(len(drinks[0]))
-
 
 def do_ingredients_exist(drink):
     for i in range(1,16):
@@ -110,16 +106,3 @@ for drink in drinks:
     else:
         print('there was a problem with drink id: ', drink['idDrink'])
     
-
-
-
-# for drink in response_obj['drinks']:
-#     for attr,val in drink.items():
-#         print(attr,val)
-
-# print(drinks[0]['strDrink'])
-# for i in range(1,16):
-    # print(i, end=" => ")
-
-    # print(drinks[0][f'strIngredient{i}'], end=': ')
-    # print(drinks[0][f'strMeasure{i}'])
