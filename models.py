@@ -4,10 +4,9 @@ from datetime import datetime
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
+
 bcrypt = Bcrypt()
 db = SQLAlchemy()
-
-
 
 
 
@@ -32,7 +31,7 @@ class Tool(db.Model):
     )
 
 
-    class Ingredient(db.Model):
+class Ingredient(db.Model):
 
     __tablename__ = "ingredients"
 
@@ -58,6 +57,7 @@ class Tool(db.Model):
 
 
 
+
 class Recipe(db.Model):
 
     __tablename__ = "recipes"
@@ -73,13 +73,46 @@ class Recipe(db.Model):
         unique=True
     )
 
-    process = db.Column(
+    category = db.Column(
         db.Text
     )
 
+    process_EN = db.Column(
+        db.Text
+    )
+
+    process_ES = db.Column(
+        db.Text
+    )
+
+    process_FR = db.Column(
+        db.Text
+    )
+
+    process_DE = db.Column(
+        db.Text
+    )
+
+    process_IT = db.Column(
+        db.Text
+    )
+
+    image_url = db.Column(
+        db.Text
+    )
+    
     alcoholic = db.Column(
         db.Boolean,
         nullable=False
+    ) 
+
+    created_on = db.Column(
+        db.Text
+    )
+
+    ingredients = db.relationship(
+        'Ingredient',
+        secondary='recipe_ingredients'
     )
 
 
@@ -172,7 +205,7 @@ class User(db.Model):
         return False
 
 
-class UserTools(db.Model):
+class UserTool(db.Model):
 
     __tablename__ = "user_tools"
 
@@ -189,7 +222,7 @@ class UserTools(db.Model):
     )
 
 
-class Favorites(db.Model):
+class Favorite(db.Model):
 
     __tablename__ = "favorites"
 
@@ -214,7 +247,7 @@ class Favorites(db.Model):
     )
 
 
-class UserIngredients(db.Model):
+class UserIngredient(db.Model):
 
     __tablename__ = "user_ingredients"
 
@@ -230,6 +263,27 @@ class UserIngredients(db.Model):
         primary_key=True
     )
 
+class RecipeIngredient(db.Model):
+
+    __tablename__ = "recipe_ingredients"
+
+    recipe_id = db.Column(
+        db.Integer,
+        db.ForeignKey('recipes.id'),
+        primary_key=True
+    )
+
+    ingredient_id = db.Column(
+        db.Integer,
+        db.ForeignKey('ingredients.id'),
+        primary_key=True
+    )
+
+    measurement = db.Column(
+        db.Text
+    )
+    
+
 
 def connect_db(app):
     """Connect this database to provided Flask app.
@@ -237,3 +291,4 @@ def connect_db(app):
 
     db.app = app
     db.init_app(app)
+

@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm
-from models import db
+from models import db, connect_db, User, Recipe, Tool, User, UserIngredient, RecipeIngredient, UserTool, Favorite
 
 CURR_USER_KEY = "curr_user"
 
@@ -132,13 +132,14 @@ def home():
 def search():
 
     #TODO: OMG lots of stuff
+    pass
 
 
 @app.route('/ingredients_tools', methods=["GET", "POST"])
 def ingredients_and_tools_list():
 
     #TODO: stuff
-
+    pass
 
 #########################################################
 # displays
@@ -147,12 +148,13 @@ def ingredients_and_tools_list():
 def results():
 
     #TODO: OMG lots of stuff
+    pass
 
 @app.route('/display/recipe')
 def recipe():
 
     #TODO: stuff
-
+    pass
 
 ########################################################
 # user stuff
@@ -161,13 +163,16 @@ def recipe():
 def favorites_list():
 
     #TODO: stuff
+    pass
 
 @app.route('/user/ingredients')
 def ingredients_tools():
 
     #TODO: stuff
+    pass
 
 @app.route('/user/preferences')
 def preferences():
 
     #TODO: stuff
+    pass
