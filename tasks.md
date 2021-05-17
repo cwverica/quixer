@@ -42,3 +42,20 @@ Everything! Where to start
 - searching (the big one)
     - Must be able to search and filter by ingredients on hand
     - Must also be able to sort by preferences
+
+
+
+
+
+
+
+
+---
+
+
+scratch pad area:
+
+
+
+    SELECT ingredients.name, recipe_ingredients.measurement FROM recipe_ingredients JOIN ingredients ON ingredient_id=ingredients.id WHERE recipe_ingredients.recipe_id=13332;
+

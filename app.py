@@ -5,7 +5,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm
-from models import db, connect_db, User, Recipe, Tool, User, UserIngredient, RecipeIngredient, UserTool, Favorite
+from models import db, connect_db, User, Recipe, Tool, User, UserIngredient
+from models import Ingredient, RecipeIngredient, UserTool, Favorite
 
 CURR_USER_KEY = "curr_user"
 
@@ -24,6 +25,9 @@ toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
+
+
+
 ##############################################################################
 # User signup/login/logout
 
@@ -37,6 +41,8 @@ def add_user_to_g():
 
     else:
         g.user = None
+
+    
 
 
 def do_login(user):
@@ -125,14 +131,26 @@ def home():
     if g.user:
         return render_template('user_home.html') #TODO: create template
 
-    return render_template('anon_home.html') #TODO: create template
+    return render_template('home.html') #TODO: create template
 
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
-
-    #TODO: OMG lots of stuff
-    pass
+    
+    if request.method == 'POST':
+        
+        if 'seen_list' in session:
+            del session['seen_list']
+        if 'id_list' in session:
+            del session['id_list']
+        
+        ingredient = request.form.get('ingredient')
+      
+        session['id_list'] = get_recipe_ids_with_ingredient(ingredient)
+        return redirect('display/results')
+    else:
+        return render_template('search.html')
+    
 
 
 @app.route('/ingredients_tools', methods=["GET", "POST"])
@@ -146,12 +164,39 @@ def ingredients_and_tools_list():
 
 @app.route('/display/results')
 def results():
+    results = []
+    if 'seen_list' in session:
+        seen_list = set(session['seen_list'])
+    else:
+        seen_list = set()
+        
+    if 'id_list' in session:
+        id_list = session['id_list'] 
+    else:
+        id_list = None
+    
+    if id_list:
+        count = 0
+        while (count < 10):
+            if id_list[0]:
+                id = id_list.pop(0)
+                if id not in seen_list:
+                    results.append(get_full_recipe_from_id(id))
+                    seen_list.add(id)
+                    count += 1
+            else:
+                break
+    else:
+        results = None
+    
+    session['id_list'] = id_list
+    session['seen_list'] = seen_list
 
-    #TODO: OMG lots of stuff
-    pass
 
-@app.route('/display/recipe')
-def recipe():
+    return render_template('display_results.html', results=results)
+
+@app.route('/display/recipe/<int:id>')
+def recipe(id):
 
     #TODO: stuff
     pass
@@ -176,3 +221,61 @@ def preferences():
 
     #TODO: stuff
     pass
+
+###########################################################
+
+
+
+
+###########################################################
+# Logic calls
+###########################################################
+
+
+def get_recipe_ids_with_ingredient(ingredient):
+    '''
+    Takes an ingredient name, searches the database, returns a list of
+    recipe ids that use provided ingredient.
+    Returns None if no match
+    '''
+
+    ingredient_list = Ingredient.query.filter(Ingredient.name.ilike(ingredient)).all()
+    if len(ingredient_list) >= 1:
+        recipe_list = []
+        for ing in ingredient_list:
+            for recipe in RecipeIngredient.query.filter(RecipeIngredient.ingredient_id==ing.id).all():
+                recipe_list.append(recipe.recipe_id) 
+        return recipe_list
+
+    else:
+        return None
+
+def get_full_recipe_from_id(id):
+    '''
+    Takes a recipe id, returns the full recipe as a dict
+    '''
+    recipe = {}
+    recipe_info = Recipe.query.filter(Recipe.id==id).first()
+    ingredient_list = RecipeIngredient.query.filter(RecipeIngredient.recipe_id==id).all()
+    recipe['id'] = id
+    recipe['name'] = recipe_info.name
+    recipe['category'] = recipe_info.category
+    recipe['process_EN'] = recipe_info.process_EN
+    recipe['process_ES'] = recipe_info.process_ES
+    recipe['process_FR'] = recipe_info.process_FR
+    recipe['process_DE'] = recipe_info.process_DE
+    recipe['process_IT'] = recipe_info.process_IT
+    recipe['alcoholic'] = recipe_info.alcoholic
+    recipe['created_on'] = recipe_info.created_on
+    ing_count = 0
+    ingredients = {}
+    for ingredient in ingredient_list:
+        ing_count += 1
+        ingredient_obj = Ingredient.query.filter(Ingredient.id==ingredient.ingredient_id).first()
+        ingredients[f'ingredient{ing_count}'] = ingredient_obj.name
+        ingredients[f'measure{ing_count}'] = ingredient.measurement
+
+    recipe['ingredients'] = ingredients
+    import pdb
+    pdb.set_trace()
+    return recipe

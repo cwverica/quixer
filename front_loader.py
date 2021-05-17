@@ -72,21 +72,25 @@ def add_recipe_ingredients_relationships(drink):
         if ingredient:
             try:
                 db_ingredient = Ingredient.query.filter(Ingredient.name == ingredient).one()
-                new_recipe_ingredient = RecipeIngredient(
-                                                        recipe_id=drink['idDrink'],
-                                                        ingredient_id=db_ingredient.id,
-                                                        measurement='Not provided, use judgement' if not drink[f'strMeasure{1}'] else drink[f'strMeasure{1}']
-                )
-                db.session.add(new_recipe_ingredient)
-                db.session.commit()
-
+                already_exists = RecipeIngredient.query.filter(RecipeIngredient.recipe_id == drink['idDrink']).filter(RecipeIngredient.ingredient_id==db_ingredient.id).first()
+                if not already_exists:
+                    new_recipe_ingredient = RecipeIngredient(
+                                                            recipe_id=drink['idDrink'],
+                                                            ingredient_id=db_ingredient.id,
+                                                            measurement='Not provided, use judgement' if not drink[f'strMeasure{1}'] else drink[f'strMeasure{1}']
+                    )
+                    db.session.add(new_recipe_ingredient)
+                    db.session.commit()
+                    print("added #", i)
+                else:
+                    continue
             except Exception as err:
                 print('error', err)
                 return False
         else:
             break
         
-        return True
+    return True
 
 
 
