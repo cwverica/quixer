@@ -69,7 +69,8 @@ def create_recipe(drink):
 
 
 def add_recipe_ingredients_relationships(drink):
-    for i in range(1, MAX_INGREDIENTS+1): #+1 because inclusive & index is not 0 based
+    i = 1
+    while (i <= MAX_INGREDIENTS):
         ingredient = drink[f'strIngredient{i}']
         if ingredient:
             try:
@@ -84,7 +85,9 @@ def add_recipe_ingredients_relationships(drink):
                     db.session.add(new_recipe_ingredient)
                     db.session.commit()
                     print("added #", i)
+                    i += 1
                 else:
+                    i += 1
                     continue
             except Exception as err:
                 print('error', err)
