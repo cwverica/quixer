@@ -178,7 +178,7 @@ def results():
     if id_list:
         count = 0
         while (count < 10):
-            if id_list[0]:
+            if id_list:
                 id = id_list.pop(0)
                 if id not in seen_list:
                     results.append(get_full_recipe_from_id(id))
@@ -190,7 +190,7 @@ def results():
         results = None
     
     session['id_list'] = id_list
-    session['seen_list'] = seen_list
+    session['seen_list'] = list(seen_list) #TODO:
 
 
     return render_template('display_results.html', results=results)
@@ -265,6 +265,7 @@ def get_full_recipe_from_id(id):
     recipe['process_FR'] = recipe_info.process_FR
     recipe['process_DE'] = recipe_info.process_DE
     recipe['process_IT'] = recipe_info.process_IT
+    recipe['image_url'] = recipe_info.image_url
     recipe['alcoholic'] = recipe_info.alcoholic
     recipe['created_on'] = recipe_info.created_on
     ing_count = 0
@@ -276,6 +277,4 @@ def get_full_recipe_from_id(id):
         ingredients[f'measure{ing_count}'] = ingredient.measurement
 
     recipe['ingredients'] = ingredients
-    import pdb
-    pdb.set_trace()
     return recipe
