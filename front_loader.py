@@ -8,7 +8,8 @@ connect_db(app)
 db.drop_all()
 db.create_all()
 
-MAX_INGREDIENTS = 15
+MAX_INGREDIENTS = 15 # API provides data slots for up to 15 ingredients, 
+                     # even when they're not all being used
 
 
 
