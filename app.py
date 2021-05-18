@@ -1,4 +1,5 @@
 import os
+import math
 
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
@@ -139,15 +140,13 @@ def search():
     
     if request.method == 'POST':
         
-        if 'seen_list' in session:
-            del session['seen_list']
         if 'id_list' in session:
             del session['id_list']
         
         ingredient = request.form.get('ingredient')
       
         session['id_list'] = get_recipe_ids_with_ingredient(ingredient)
-        return redirect('display/results')
+        return redirect('display/results/0')
     else:
         return render_template('search.html')
     
@@ -162,44 +161,47 @@ def ingredients_and_tools_list():
 #########################################################
 # displays
 
-@app.route('/display/results')
-def results():
+@app.route('/display/results/<int:page_num>')
+def results(page_num):
     results = []
-    if 'seen_list' in session:
-        seen_list = set(session['seen_list'])
-    else:
-        seen_list = set()
         
     if 'id_list' in session:
         id_list = session['id_list'] 
     else:
         id_list = None
+
+    total_pages = 0
+    if id_list:
+        total_pages = math.ceil(len(id_list)/10) - 1
+        
     
     if id_list:
-        count = 0
-        while (count < 10):
-            if id_list:
-                id = id_list.pop(0)
-                if id not in seen_list:
-                    results.append(get_full_recipe_from_id(id))
-                    seen_list.add(id)
-                    count += 1
+        index_start = page_num * 10
+        if index_start >= len(id_list):
+            return render_template('404.html') #TODO: create 404 page
+        for index in range(index_start, index_start+10):
+            if index < len(id_list):
+                results.append(get_full_recipe_from_id(id_list[index]))
             else:
                 break
     else:
         results = None
-    
-    session['id_list'] = id_list
-    session['seen_list'] = list(seen_list) #TODO:
 
 
-    return render_template('display_results.html', results=results)
+    return render_template('search_results.html', results=results, total_pages=total_pages, cur_page=page_num)
 
 @app.route('/display/recipe/<int:id>')
 def recipe(id):
-
-    #TODO: stuff
-    pass
+    if 'from' in request.args:
+        came_from = request.args['from']
+    else:
+        came_from = None
+    exists = Recipe.query.filter(Recipe.id==id).first()
+    if not exists:
+        return render_template('404.html')
+    recipe = get_full_recipe_from_id(id)
+    
+    return render_template('display_recipe.html', recipe=recipe, came_from=came_from)
 
 ########################################################
 # user stuff
@@ -244,7 +246,8 @@ def get_recipe_ids_with_ingredient(ingredient):
         recipe_list = []
         for ing in ingredient_list:
             for recipe in RecipeIngredient.query.filter(RecipeIngredient.ingredient_id==ing.id).all():
-                recipe_list.append(recipe.recipe_id) 
+                if recipe.recipe_id not in recipe_list:
+                    recipe_list.append(recipe.recipe_id) 
         return recipe_list
 
     else:

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{recipe.name}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    This should be a page for {{recipe.name}}
+    Is It?
+
+</div>
+
+{% if came_from %}
+<a class="btn btn-primary btn-sm" href="/display/results/{{came_from}}">Back to Results</a>
+{% endif %}
+{% endblock %}

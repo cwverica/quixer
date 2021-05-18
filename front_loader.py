@@ -8,6 +8,8 @@ connect_db(app)
 db.drop_all()
 db.create_all()
 
+MAX_INGREDIENTS = 15
+
 
 
 def do_ingredients_exist(drink):
@@ -67,7 +69,7 @@ def create_recipe(drink):
 
 
 def add_recipe_ingredients_relationships(drink):
-    for i in range(1,16):
+    for i in range(1, MAX_INGREDIENTS+1): #+1 because inclusive & index is not 0 based
         ingredient = drink[f'strIngredient{i}']
         if ingredient:
             try:
