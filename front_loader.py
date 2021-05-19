@@ -81,7 +81,7 @@ def add_recipe_ingredients_relationships(drink):
                     new_recipe_ingredient = RecipeIngredient(
                                                             recipe_id=drink['idDrink'],
                                                             ingredient_id=db_ingredient.id,
-                                                            measurement='Not provided, use judgement' if not drink[f'strMeasure{1}'] else drink[f'strMeasure{1}']
+                                                            measurement='Not provided, use judgement' if not drink[f'strMeasure{i}'] else drink[f'strMeasure{i}']
                     )
                     db.session.add(new_recipe_ingredient)
                     db.session.commit()

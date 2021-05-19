@@ -1,5 +1,6 @@
 import os
 import math
+import random
 
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
@@ -12,6 +13,7 @@ from models import Ingredient, RecipeIngredient, UserTool, Favorite
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
+
 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
@@ -129,10 +131,12 @@ def logout():
 @app.route('/')
 def home():
     
+    random_recipe = get_random_recipe()
+
     if g.user:
         return render_template('user_home.html') #TODO: create template
 
-    return render_template('home.html') #TODO: create template
+    return render_template('home.html', random_recipe=random_recipe) 
 
 
 @app.route('/search', methods=["GET", "POST"])
@@ -200,7 +204,8 @@ def recipe(id):
     if not exists:
         return render_template('404.html')
     recipe = get_full_recipe_from_id(id)
-    
+    # import pdb
+    # pdb.set_trace()
     return render_template('display_recipe.html', recipe=recipe, came_from=came_from)
 
 ########################################################
@@ -281,3 +286,9 @@ def get_full_recipe_from_id(id):
 
     recipe['ingredients'] = ingredients
     return recipe
+
+def get_random_recipe():
+
+    every_id = [recipe.id for recipe in Recipe.query.all()]
+    random_id = random.choice(every_id)
+    return get_full_recipe_from_id(random_id)

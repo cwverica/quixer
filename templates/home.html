@@ -3,5 +3,28 @@
 {% block title %} QuIxR {% endblock %}
 
 {% block content %}
-Here is some content
+
+<div class="container justify-content-center col-lg-8">
+    <p class="h2 text-center">Welcome to Quixr!</p>
+
+    <p class="text-center">Quixr's mission is to help you figure out what to drink! Sometimes it can be daunting, or you
+        just want to try something new, and that's what we're here for.</p>
+    <hr>
+    <p class="h4 text-center">Random recipe!</p>
+    <p>Here's a random recipe to jump-start you. Who knows? Maybe it'll wind up being your favorite...</p>
+    <div class="card text-center col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3" style="width: 18rem;">
+        <img src="{{random_recipe.image_url}}" class="card-img-top" alt="">
+        <div class="card-body">
+            <h5 class="card-title">{{random_recipe.name}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Number of ingredients:
+                {{(random_recipe['ingredients']|length /2) | int}}
+            </h6>
+            <p class="card-text">{{ random_recipe.category }}</p>
+            <a href="/display/recipe/{{random_recipe.id}}?from=home" class="btn btn-primary">See Recipe!</a>
+        </div>
+    </div>
+
+</div>
+
+
 {% endblock %}

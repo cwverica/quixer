@@ -4,12 +4,37 @@
 
 {% block content %}
 <div class="container">
-    This should be a page for {{recipe.name}}
-    Is It?
+    <div class="clearfix">
+        <img src="{{recipe.image_url}}" class="col-sm-8 col-md-6 col-xl-4 float-md-end mb-3 ms-md-3" alt="...">
+
+        <p class="h3 text-center">{{recipe.name}}
+        </p>
+
+        <p> <span class="h5">Ingredient list: </span>
+            <br>
+            {% for pair in recipe['ingredients'] | batch(2) %}
+            {% for elem in pair %}
+            {{ loop.cycle('Ingredient:', ' - ') }} {{recipe['ingredients'][elem]}}
+            {% endfor %}
+            <br>
+            {% endfor %}
+        </p>
+
+        <p>
+            <span class="h5">Instructions: </span>
+            <br>
+            {{recipe.process_EN}}
+        </p>
+
+
+    </div>
 
 </div>
 
-{% if came_from %}
+{% if not came_from %}
+{% elif came_from == 'home' %}
+<a class="btn btn-primary btn-sm" href="/">Back to Home</a>
+{% elif came_from %}
 <a class="btn btn-primary btn-sm" href="/display/results/{{came_from}}">Back to Results</a>
 {% endif %}
 {% endblock %}
