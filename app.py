@@ -163,6 +163,7 @@ def ingredients_and_tools_list():
 
 @app.route('/display/results/<int:page_num>')
 def results(page_num):
+    RESULTS_PER_PAGE = 12
     results = []
         
     if 'id_list' in session:
@@ -172,21 +173,20 @@ def results(page_num):
 
     total_pages = 0
     if id_list:
-        total_pages = math.ceil(len(id_list)/10) - 1
+        total_pages = math.ceil(len(id_list)/RESULTS_PER_PAGE) - 1
         
     
     if id_list:
-        index_start = page_num * 10
+        index_start = page_num * RESULTS_PER_PAGE
         if index_start >= len(id_list):
             return render_template('404.html') #TODO: create 404 page
-        for index in range(index_start, index_start+10):
+        for index in range(index_start, index_start+RESULTS_PER_PAGE):
             if index < len(id_list):
                 results.append(get_full_recipe_from_id(id_list[index]))
             else:
                 break
     else:
         results = None
-
 
     return render_template('search_results.html', results=results, total_pages=total_pages, cur_page=page_num)
 
