@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} QuIxR - Search {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class="text-info">Search</h1>
+</div>
+<form action="/search" method="POST">
+    <div class="form-group">
+        <label for="ingredient1">Search for drinks containing:</label>
+        <input type="text" class="form-control" id="ingredient1" name="ingredient"
+            placeholder="ex. Whiskey, Gin, Vodka, etc.">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+{% endblock %}

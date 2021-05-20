@@ -1,0 +1,6 @@
+/venv/
+/__pycache__/
+/keys/
+app_logic.py
+/static/app.css
+/static/
