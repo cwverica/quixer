@@ -2,8 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <!-- Required meta tags -->
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -38,14 +37,21 @@
                             User
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/user/ingredients">Ingredients/Tools</a></li>
-                            <li><a class="dropdown-item" href="/user/preferences">Preferences</a></li>
+                            {% if 'curr_user' in session %}
+                            <li><a class="dropdown-item" href="/user/favorites/0">Favorites</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="/user/favorites">Favorites</a></li>
+                            <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="/user/login">Login</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/user/signup">Sign Up!</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
