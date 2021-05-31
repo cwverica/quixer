@@ -304,7 +304,7 @@ class Favorite(db.Model):
 
     @classmethod
     def get_user_favorites(cls, user_id):
-        return [fave in cls.query.filter(Favorite.user_id==user_id).all()]
+        return [fave.recipe_id for fave in cls.query.filter(Favorite.user_id==user_id).all()]
 
 
 

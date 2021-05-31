@@ -13,33 +13,43 @@ lovers and afficionados who want to explore the unknown.
 
 ---
 
+## QuickStart
+Getting started in a flash, isn't as quick.
+- Sign up to be a patreon supporter of [thecocktaildb](https://www.thecocktaildb.com/) to get an api key (recommended) 
+or 
+- install the provided database file (swap username with your username)
+ > psql -U username quixr < dbexport.pgsql 
+- create a virtual environment and install the requirements.txt
+ > python -m venv venv  (or python3 depending on your system)
+ > pip install -r requirements.txt
+- run the app
+ > flask run
+- access at localhost:5000
+
+---
+
 ### Steps to be completed:
 
-I have actually signed up to [thecocktaildb](https://www.thecocktaildb.com/). 
+I signed up to [thecocktaildb](https://www.thecocktaildb.com/). 
 Thecocktaildb provides the ingredients and their measurements all as separate fields
 in the response, which will be helpful to organizing the data in a way most useful to me.
 I had to become a patreon supporter for full access to the api.
 
 I will have to set-up a database for users. Retained information will be:
-- the tools they have on hand 
-- the ingredients they have on hand
+
 - favorite recipes
 - notes about favorited recipes
 - inter user relationships of some sort (part of stretch goal)
 
-They will be able to edit their tools or ingredients at any point. They will also be 
-able to "favorite" recipes, and even leave themselves notes about a recipes they have favorited. 
+Users will be able to "favorite" recipes, and even leave themselves notes about a recipes they have favorited. 
 
 
 The meat of the app is finding recipes. Users will be able to query based upon the 
 ingredients they have on hand, with a parameter of 'willing to purchase an additional 
 (0-3) ingredients.'<sup>[2](#notes)</sup> These ingredients will be highlighted when the person views the recipe.
 
-There will be additional logic to add preferences (would prefer a whiskey drink, avoid a 
-vodka drink, no citrus, etc.)
 
-<sup>[2](#notes)</sup> There will be a sign up which will include onboarding familiarizing them with their 
-ingredients and tools pages while filling them out for the first time, then take them 
+<sup>[2](#notes)</sup> There will be a sign up which will then take them 
 to the search page. After the first search, there would be an option for tips (like 
 how to favorite, leave notes, share (if implemented), etc.).
 

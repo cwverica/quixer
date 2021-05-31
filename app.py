@@ -1,7 +1,7 @@
 import os
 import math
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -138,9 +138,6 @@ def home():
     
     random_recipe = Recipe.get_random_recipe()
 
-    # if g.user:
-        # return render_template('user_home.html') #TODO: create template
-
     return render_template('home.html', random_recipe=random_recipe) 
 
 
@@ -167,6 +164,9 @@ def ingredients_and_tools_list():
     #TODO: stuff
     pass
 
+
+
+
 #########################################################
 # displays
 
@@ -189,7 +189,7 @@ def results(page_num):
         index_start = page_num * RESULTS_PER_PAGE
         if index_start >= len(id_list):
             flash("Out of search results index")
-            return render_template('404.html') #TODO: create 404 page
+            return render_template('404.html') 
         for index in range(index_start, index_start+RESULTS_PER_PAGE):
             if index < len(id_list):
                 results.append(Recipe.get_full_recipe_from_id(id_list[index]))
@@ -211,6 +211,9 @@ def recipe(id):
     recipe = Recipe.get_full_recipe_from_id(id)
 
     return render_template('display_recipe.html', recipe=recipe, came_from=came_from, page_num=page_num)
+
+
+
 
 ########################################################
 # user stuff
@@ -247,18 +250,32 @@ def favorites_list(page_num):
 
     return render_template('user/favorites.html', favorites=favorites, total_pages=total_pages, cur_page=page_num)
 
-@app.route('/user/ingredients')
-def ingredients_tools():
+@app.route('/user/favorite/<int:recipe_id>', methods=["POST"])
+def add_favorite(recipe_id):
+    fave_obj = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    if fave_obj:
+        return False
+    else:
+        fave_obj = Favorite(user_id=session[CURR_USER_KEY],
+                                            recipe_id=recipe_id)
+        db.session.add(fave_obj)
+        db.session.commit()
+        return fave_obj
 
-    #TODO: stuff
-    pass
 
-@app.route('/user/preferences')
-def preferences():
-
-    #TODO: stuff
-    pass
-
+@app.route('/user/unfavorite/<int:recipe_id>', methods=["POST"])
+def remove_favorite(recipe_id):
+    fave_obj = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    if fave_obj:
+        db.session.delete(fave_obj)
+        db.session.commit()
+        return True
+    else:
+        return False
+    
+@app.route('/user/get_favorites')
+def get_user_favorites():
+    return jsonify(Favorite.get_user_favorites(session[CURR_USER_KEY]))
 ###########################################################
 
 
