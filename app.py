@@ -6,8 +6,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm
-from models import db, connect_db, User, Recipe, Tool, User, Ingredient
-from models import UserIngredient, RecipeIngredient, UserTool, Favorite
+from models import db, connect_db, User, Recipe, User, Ingredient
+from models import UserIngredient, RecipeIngredient, Favorite
 
 try:
     from keys.secret_key import SECRET_KEY
@@ -50,7 +50,9 @@ def add_user_to_g():
         g.user = None
 
     
-
+@app.errorhandler(404)
+def not_found(e):
+  return render_template("404.html")
 
 def do_login(user):
     """Log in user."""
@@ -158,14 +160,6 @@ def search():
     
 
 
-@app.route('/ingredients_tools', methods=["GET", "POST"])
-def ingredients_and_tools_list():
-
-    #TODO: stuff
-    pass
-
-
-
 
 #########################################################
 # displays
@@ -220,27 +214,34 @@ def recipe(id):
 
 @app.route('/user/favorites/<int:page_num>')
 def favorites_list(page_num):
+    if not g.user:
+        flash('You must be logged in to do that.')
+        return redirect('/user/login')
+
     RESULTS_PER_PAGE = 12
     favorites = []
     
-    favorite_ids = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY]).order_by(Favorite.recipe_id.asc()).all()
-
+    favorite_objs = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY])\
+    .order_by(Favorite.recipe_id.asc()).all()
+ 
     total_pages = 0
-    if favorite_ids:
-        total_pages = math.ceil(len(favorite_ids)/RESULTS_PER_PAGE) - 1
+    if favorite_objs:
+        total_pages = math.ceil(len(favorite_objs)/RESULTS_PER_PAGE) - 1
         
         index_start = page_num * RESULTS_PER_PAGE
-        if index_start >= len(favorite_ids):
+        if index_start >= len(favorite_objs):
             flash("Out of search results index")
             return render_template('404.html') 
         for index in range(index_start, index_start+RESULTS_PER_PAGE):
-            if index < len(favorite_ids):
-                fave_obj = Favorite.query().filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==favorite_ids[index]).get()
+            if index < len(favorite_objs):
+                fave_obj = favorite_objs[index]
+                recipe_obj = Recipe.get_full_recipe_from_id(fave_obj.recipe_id)
                 favorite = {
-                    'recipe_id' : fave_obj.recipe_id,
+                    'id' : fave_obj.recipe_id,
                     'notes' : fave_obj.user_notes,
                     'rating' : fave_obj.user_rating,
-                    'recipe' : Recipe.get_full_recipe_from_id(favorite_ids[index]) 
+                    'name' : recipe_obj['name'],
+                    'image_url' : recipe_obj['image_url']  
                 }
                 favorites.append(favorite)
             else:
@@ -248,34 +249,75 @@ def favorites_list(page_num):
     else:
         favorites = None
 
+
     return render_template('user/favorites.html', favorites=favorites, total_pages=total_pages, cur_page=page_num)
 
-@app.route('/user/favorite/<int:recipe_id>', methods=["POST"])
+@app.route('/user/favorite/<int:recipe_id>')
 def add_favorite(recipe_id):
-    fave_obj = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    if not g.user:
+        flash('You must be logged in to do that.')
+        return redirect('/user/login')
+
+    fave_obj = Favorite.query\
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
     if fave_obj:
-        return False
+        return 'False'
     else:
         fave_obj = Favorite(user_id=session[CURR_USER_KEY],
                                             recipe_id=recipe_id)
         db.session.add(fave_obj)
         db.session.commit()
-        return fave_obj
+        return 'True'
 
 
-@app.route('/user/unfavorite/<int:recipe_id>', methods=["POST"])
+@app.route('/user/unfavorite/<int:recipe_id>')
 def remove_favorite(recipe_id):
-    fave_obj = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    if not g.user:
+        flash('You must be logged in to do that.')
+        return redirect('/user/login')
+
+    fave_obj = Favorite.query\
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
     if fave_obj:
         db.session.delete(fave_obj)
         db.session.commit()
-        return True
+        return 'True'
     else:
-        return False
+        return 'False'
     
 @app.route('/user/get_favorites')
 def get_user_favorites():
+    if not g.user:
+        flash("You do not have access to that")
+        return render_template("404.html")
+
     return jsonify(Favorite.get_user_favorites(session[CURR_USER_KEY]))
+
+@app.route('/user/get_notes/<int:recipe_id>')
+def get_fav_notes(recipe_id):
+    if not g.user:
+        flash("You do not have access to that")
+        return render_template("404.html")
+
+    return jsonify(Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY],\
+     Favorite.recipe_id==recipe_id)\
+    .first().user_notes)
+
+@app.route('/user/update_notes/<int:recipe_id>', methods=["POST"])
+def update_notes(recipe_id):
+    if not g.user:
+        flash("You do not have access to that")
+        return render_template("404.html")
+
+    notes = request.json.get('notes')
+    fave_obj = Favorite.query\
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+
+    if fave_obj:
+        fave_obj.user_notes = notes
+        db.session.commit()
+        return 'True'
+    else:
+        return 'False'
+
 ###########################################################
-
-

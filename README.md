@@ -48,7 +48,7 @@ You should then run front_loader.py
 At this point, your app is ready to launch, either via:
 >flask run
  
- or setting it up on a host.
+or setting it up on a host.
 
 ---
 

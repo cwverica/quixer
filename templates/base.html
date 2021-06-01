@@ -76,6 +76,8 @@
     {% if 'curr_user' in session %}
     <script src="{{ url_for('static', filename='favorite_buttons.js')}}"></script>
     {% endif %}
+    {% block scripts %}
+    {% endblock %}
 </body>
 
 </html>

@@ -10,17 +10,17 @@
         <p class="h3 text-center drink-title" data-recipe-id="{{recipe.id}}">{{recipe.name}}
         </p>
 
-        <p> <span class="h5">Ingredient list: </span>
+        <p class="text-center"> <span class="h5">Ingredient list: </span>
             <br>
             {% for pair in recipe['ingredients'] | batch(2) %}
             {% for elem in pair %}
-            {{ loop.cycle(' ', ' - ') }} {{recipe['ingredients'][elem]}}
+            {{ loop.cycle('', ' - ') }} {{recipe['ingredients'][elem]}}
             {% endfor %}
             <br>
             {% endfor %}
         </p>
 
-        <p>
+        <p class="text-center">
             <span class="h5">Instructions: </span>
             <br>
             {{recipe.process_EN}}
@@ -31,12 +31,29 @@
 
 </div>
 
-{% if not came_from %}
-{% elif came_from == 'favorites' %}
+
+
+{% if came_from == 'favorites' %}
+<form action="" id="notes-form">
+    <div class="form-group col-10 offset-1">
+        <label for="user-notes">Notes</label>
+        <textarea class="form-control" id="user-notes" rows="3" placeholder="What do you think?.."></textarea>
+    </div>
+    <input class="btn btn-info" type="button" id="save-btn" value="Save Changes">
+
+
+</form>
 <a class="btn btn-primary btn-sm" href="/user/favorites/{{page_num}}">Back to Favorites</a>
 {% elif came_from == 'home' %}
 <a class="btn btn-primary btn-sm" href="/">Back to Home</a>
 {% elif came_from == 'search' %}
 <a class="btn btn-primary btn-sm" href="/display/results/{{page_num}}">Back to Results</a>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% if came_from == 'favorites' %}
+<script src="{{ url_for('static', filename='edit_notes.js')}}"></script>
 {% endif %}
 {% endblock %}

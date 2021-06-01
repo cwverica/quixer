@@ -10,25 +10,6 @@ db = SQLAlchemy()
 
 
 
-class Tool(db.Model):
-    
-    __tablename__ = "tools"
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True,
-        autoincrement=True
-    )
-
-    name = db.Column(
-        db.Text,
-        nullable=False,
-        unique=True
-    )
-
-    substitues = db.Column(
-        db.Text
-    )
 
 
 class Ingredient(db.Model):
@@ -206,11 +187,6 @@ class User(db.Model):
         nullable=False,
     )
 
-    tools = db.relationship(
-        'Tool',
-        secondary='user_tools'
-    )
-
     ingredients = db.relationship(
         'Ingredient',
         secondary='user_ingredients'
@@ -259,23 +235,6 @@ class User(db.Model):
                 return user
 
         return False
-
-
-class UserTool(db.Model):
-
-    __tablename__ = "user_tools"
-
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id'),
-        primary_key=True
-    )
-
-    tool_id = db.Column(
-        db.Integer,
-        db.ForeignKey('tools.id'),
-        primary_key=True
-    )
 
 
 class Favorite(db.Model):

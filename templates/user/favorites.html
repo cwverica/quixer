@@ -13,10 +13,6 @@
             <img src="{{recipe.image_url}}" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title drink-title" data-recipe-id="{{recipe.id}}">{{recipe.name}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Your rating:
-                    {{ recipe['rating'] }}
-                </h6>
-                <p class="card-text"><em>Notes:</em> {{ recipe['notes'] if recipe['notes'] else "None"}} </p>
                 <a href="/display/recipe/{{recipe.id}}?from=favorites&page_num={{cur_page}}" class="btn btn-primary">See
                     Recipe!</a>
             </div>
