@@ -1,14 +1,18 @@
 import os
 import math
-import random
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm
-from models import db, connect_db, User, Recipe, Tool, User, UserIngredient
-from models import Ingredient, RecipeIngredient, UserTool, Favorite
+from forms import UserAddForm, LoginForm
+from models import db, connect_db, User, Recipe, User, Ingredient
+from models import UserIngredient, RecipeIngredient, Favorite
+
+try:
+    from keys.secret_key import SECRET_KEY
+except:
+    pass
 
 CURR_USER_KEY = "curr_user"
 
@@ -23,7 +27,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', SECRET_KEY)
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
@@ -46,7 +50,9 @@ def add_user_to_g():
         g.user = None
 
     
-
+@app.errorhandler(404)
+def not_found(e):
+  return render_template("404.html")
 
 def do_login(user):
     """Log in user."""
@@ -60,7 +66,8 @@ def do_logout():
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
-@app.route('/signup', methods=["GET", "POST"])
+
+@app.route('/user/signup', methods=["GET", "POST"])
 def signup():
     """Handle user signup.
 
@@ -93,10 +100,10 @@ def signup():
         return redirect("/")
 
     else:
-        return render_template('users/signup.html', form=form)
+        return render_template('user/signup.html', form=form)
 
 
-@app.route('/login', methods=["GET", "POST"])
+@app.route('/user/login', methods=["GET", "POST"])
 def login():
     """Handle user login."""
 
@@ -116,7 +123,7 @@ def login():
     return render_template('user/login.html', form=form)
 
 
-@app.route('/logout')
+@app.route('/user/logout')
 def logout():
     """Handle logout of user."""
 
@@ -131,10 +138,7 @@ def logout():
 @app.route('/')
 def home():
     
-    random_recipe = get_random_recipe()
-
-    if g.user:
-        return render_template('user_home.html') #TODO: create template
+    random_recipe = Recipe.get_random_recipe()
 
     return render_template('home.html', random_recipe=random_recipe) 
 
@@ -149,18 +153,13 @@ def search():
         
         ingredient = request.form.get('ingredient')
       
-        session['id_list'] = get_recipe_ids_with_ingredient(ingredient)
+        session['id_list'] = Ingredient.get_recipe_ids_with_ingredient(ingredient)
         return redirect('display/results/0')
     else:
         return render_template('search.html')
     
 
 
-@app.route('/ingredients_tools', methods=["GET", "POST"])
-def ingredients_and_tools_list():
-
-    #TODO: stuff
-    pass
 
 #########################################################
 # displays
@@ -183,10 +182,11 @@ def results(page_num):
     if id_list:
         index_start = page_num * RESULTS_PER_PAGE
         if index_start >= len(id_list):
-            return render_template('404.html') #TODO: create 404 page
+            flash("Out of search results index")
+            return render_template('404.html') 
         for index in range(index_start, index_start+RESULTS_PER_PAGE):
             if index < len(id_list):
-                results.append(get_full_recipe_from_id(id_list[index]))
+                results.append(Recipe.get_full_recipe_from_id(id_list[index]))
             else:
                 break
     else:
@@ -196,99 +196,128 @@ def results(page_num):
 
 @app.route('/display/recipe/<int:id>')
 def recipe(id):
-    if 'from' in request.args:
-        came_from = request.args['from']
-    else:
-        came_from = None
+    came_from = request.args.get('from', None)
+    page_num = request.args.get('page_num', None)
     exists = Recipe.query.filter(Recipe.id==id).first()
     if not exists:
+        flash("No recipe with that ID exists")
         return render_template('404.html')
-    recipe = get_full_recipe_from_id(id)
-    # import pdb
-    # pdb.set_trace()
-    return render_template('display_recipe.html', recipe=recipe, came_from=came_from)
+    recipe = Recipe.get_full_recipe_from_id(id)
+
+    return render_template('display_recipe.html', recipe=recipe, came_from=came_from, page_num=page_num)
+
+
+
 
 ########################################################
 # user stuff
 
-@app.route('/user/favorites')
-def favorites_list():
+@app.route('/user/favorites/<int:page_num>')
+def favorites_list(page_num):
+    if not g.user:
+        flash('You must be logged in to do that.')
+        return redirect('/user/login')
 
-    #TODO: stuff
-    pass
-
-@app.route('/user/ingredients')
-def ingredients_tools():
-
-    #TODO: stuff
-    pass
-
-@app.route('/user/preferences')
-def preferences():
-
-    #TODO: stuff
-    pass
-
-###########################################################
-
-
-
-
-###########################################################
-# Logic calls
-###########################################################
-
-
-def get_recipe_ids_with_ingredient(ingredient):
-    '''
-    Takes an ingredient name, searches the database, returns a list of
-    recipe ids that use provided ingredient.
-    Returns None if no match
-    '''
-
-    ingredient_list = Ingredient.query.filter(Ingredient.name.ilike(ingredient)).all()
-    if len(ingredient_list) >= 1:
-        recipe_list = []
-        for ing in ingredient_list:
-            for recipe in RecipeIngredient.query.filter(RecipeIngredient.ingredient_id==ing.id).all():
-                if recipe.recipe_id not in recipe_list:
-                    recipe_list.append(recipe.recipe_id) 
-        return recipe_list
-
+    RESULTS_PER_PAGE = 12
+    favorites = []
+    
+    favorite_objs = Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY])\
+    .order_by(Favorite.recipe_id.asc()).all()
+ 
+    total_pages = 0
+    if favorite_objs:
+        total_pages = math.ceil(len(favorite_objs)/RESULTS_PER_PAGE) - 1
+        
+        index_start = page_num * RESULTS_PER_PAGE
+        if index_start >= len(favorite_objs):
+            flash("Out of search results index")
+            return render_template('404.html') 
+        for index in range(index_start, index_start+RESULTS_PER_PAGE):
+            if index < len(favorite_objs):
+                fave_obj = favorite_objs[index]
+                recipe_obj = Recipe.get_full_recipe_from_id(fave_obj.recipe_id)
+                favorite = {
+                    'id' : fave_obj.recipe_id,
+                    'notes' : fave_obj.user_notes,
+                    'rating' : fave_obj.user_rating,
+                    'name' : recipe_obj['name'],
+                    'image_url' : recipe_obj['image_url']  
+                }
+                favorites.append(favorite)
+            else:
+                break
     else:
-        return None
+        favorites = None
 
-def get_full_recipe_from_id(id):
-    '''
-    Takes a recipe id, returns the full recipe as a dict
-    '''
-    recipe = {}
-    recipe_info = Recipe.query.filter(Recipe.id==id).first()
-    ingredient_list = RecipeIngredient.query.filter(RecipeIngredient.recipe_id==id).all()
-    recipe['id'] = id
-    recipe['name'] = recipe_info.name
-    recipe['category'] = recipe_info.category
-    recipe['process_EN'] = recipe_info.process_EN
-    recipe['process_ES'] = recipe_info.process_ES
-    recipe['process_FR'] = recipe_info.process_FR
-    recipe['process_DE'] = recipe_info.process_DE
-    recipe['process_IT'] = recipe_info.process_IT
-    recipe['image_url'] = recipe_info.image_url
-    recipe['alcoholic'] = recipe_info.alcoholic
-    recipe['created_on'] = recipe_info.created_on
-    ing_count = 0
-    ingredients = {}
-    for ingredient in ingredient_list:
-        ing_count += 1
-        ingredient_obj = Ingredient.query.filter(Ingredient.id==ingredient.ingredient_id).first()
-        ingredients[f'ingredient{ing_count}'] = ingredient_obj.name
-        ingredients[f'measure{ing_count}'] = ingredient.measurement
 
-    recipe['ingredients'] = ingredients
-    return recipe
+    return render_template('user/favorites.html', favorites=favorites, total_pages=total_pages, cur_page=page_num)
 
-def get_random_recipe():
+@app.route('/user/favorite/<int:recipe_id>')
+def add_favorite(recipe_id):
+    if not g.user:
+        flash('You must be logged in to do that.')
+        return redirect('/user/login')
 
-    every_id = [recipe.id for recipe in Recipe.query.all()]
-    random_id = random.choice(every_id)
-    return get_full_recipe_from_id(random_id)
+    fave_obj = Favorite.query\
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    if fave_obj:
+        return 'False'
+    else:
+        fave_obj = Favorite(user_id=session[CURR_USER_KEY],
+                                            recipe_id=recipe_id)
+        db.session.add(fave_obj)
+        db.session.commit()
+        return 'True'
+
+
+@app.route('/user/unfavorite/<int:recipe_id>')
+def remove_favorite(recipe_id):
+    if not g.user:
+        flash('You must be logged in to do that.')
+        return redirect('/user/login')
+
+    fave_obj = Favorite.query\
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    if fave_obj:
+        db.session.delete(fave_obj)
+        db.session.commit()
+        return 'True'
+    else:
+        return 'False'
+    
+@app.route('/user/get_favorites')
+def get_user_favorites():
+    if not g.user:
+        flash("You do not have access to that")
+        return render_template("404.html")
+
+    return jsonify(Favorite.get_user_favorites(session[CURR_USER_KEY]))
+
+@app.route('/user/get_notes/<int:recipe_id>')
+def get_fav_notes(recipe_id):
+    if not g.user:
+        flash("You do not have access to that")
+        return render_template("404.html")
+
+    return jsonify(Favorite.query.filter(Favorite.user_id==session[CURR_USER_KEY],\
+     Favorite.recipe_id==recipe_id)\
+    .first().user_notes)
+
+@app.route('/user/update_notes/<int:recipe_id>', methods=["POST"])
+def update_notes(recipe_id):
+    if not g.user:
+        flash("You do not have access to that")
+        return render_template("404.html")
+
+    notes = request.json.get('notes')
+    fave_obj = Favorite.query\
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+
+    if fave_obj:
+        fave_obj.user_notes = notes
+        db.session.commit()
+        return 'True'
+    else:
+        return 'False'
+
+###########################################################

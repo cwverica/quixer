@@ -33,7 +33,7 @@ def create_ingredients(drink):
                 db.session.add(new_ingredient)
                 db.session.commit()
 
-def fix_instrucions(instr):
+def fix_instructions(instr):
     if instr is not None:
         return instr.replace('\\r', '')
     else:
@@ -51,11 +51,11 @@ def create_recipe(drink):
                         id=drink['idDrink'],
                         name=drink['strDrink'],
                         category=drink['strCategory'],
-                        process_EN=fix_instrucions(drink['strInstructions']),
-                        process_ES=fix_instrucions(drink['strInstructionsES']),
-                        process_FR=fix_instrucions(drink['strInstructionsFR']),
-                        process_DE=fix_instrucions(drink['strInstructionsDE']),
-                        process_IT=fix_instrucions(drink['strInstructionsIT']),
+                        process_EN=fix_instructions(drink['strInstructions']),
+                        process_ES=fix_instructions(drink['strInstructionsES']),
+                        process_FR=fix_instructions(drink['strInstructionsFR']),
+                        process_DE=fix_instructions(drink['strInstructionsDE']),
+                        process_IT=fix_instructions(drink['strInstructionsIT']),
                         image_url=fix_url(drink['strDrinkThumb']),
                         alcoholic=is_alcoholic(drink['strAlcoholic']),
                         created_on=drink['dateModified']

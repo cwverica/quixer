@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} QuIxR {% endblock %}
+
+{% block content %}
+
+<p class="h2 text-center">Whoops, looks like you spilled your drink!</p>
+<p class="text-center">It's alright, no use crying over spilled milk, as they say. Let's get that cleaned up and start
+    making
+    another one.</p>
+<p class="text-muted">The page you were looking for cannot be found. </p>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul><br>
+{% endif %}
+{% endwith %}
+{% endblock %}

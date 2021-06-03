@@ -1,29 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %} QuIxR - Results {% endblock %}
+{% block title %} QuIxR - Favorites {% endblock %}
 
 {% block content %}
 
 <div class="container-md text-center">
-    <div class="h2 text-center">Results</div>
+    <div class="h2 text-center">Your favorites</div>
     <div class="row">
-        {% if results %}
-        {% for recipe in results %}
+        {% if favorites %}
+        {% for recipe in favorites %}
         <div class="card text-center col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3" style="width: 18rem;">
             <img src="{{recipe.image_url}}" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title drink-title" data-recipe-id="{{recipe.id}}">{{recipe.name}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Number of ingredients:
-                    {{(recipe['ingredients']|length /2) | int}}
-                </h6>
-                <p class="card-text">{{ recipe.category }}</p>
-                <a href="/display/recipe/{{recipe.id}}?from=search&page_num={{cur_page}}" class="btn btn-primary">See
+                <a href="/display/recipe/{{recipe.id}}?from=favorites&page_num={{cur_page}}" class="btn btn-primary">See
                     Recipe!</a>
             </div>
         </div>
         {% endfor %}
     </div>
-    {% if total_pages > 0 %}
+    {% if total_pages > 0%}
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
             <nav aria-label="Page navigation">
@@ -51,8 +47,9 @@
     </div>
     {% endif %}
     {% else %}
-    <h3 class="text-warning">No Results Found</h3>
-    <a class="btn btn-primary btn-sm" href="/search">Back to Search</a>
+    <h3 class="text-warning">You don't have any favorites yet!</h3>
+    <h5 class="text-info"> May I recommend finding some? </h5>
+    <a class="btn btn-primary btn-sm" href="/search">Go Search</a>
     {% endif %}
 
 </div>
