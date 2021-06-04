@@ -3,9 +3,10 @@
 {% block title %}{{recipe.name}}{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-2">
     <div class="clearfix">
-        <img src="{{recipe.image_url}}" class="col-sm-8 col-md-6 col-xl-4 float-md-end mb-3 ms-md-3" alt="...">
+        <img src="{{recipe.image_url}}"
+            class="col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-xl-4 offset-xl-4 float-md-end mb-3 ms-md-3" alt="...">
 
         <p class="h3 text-center drink-title" data-recipe-id="{{recipe.id}}">{{recipe.name}}
         </p>
@@ -34,20 +35,34 @@
 
 
 {% if came_from == 'favorites' %}
-<form action="" id="notes-form">
-    <div class="form-group col-10 offset-1">
-        <label for="user-notes">Notes</label>
-        <textarea class="form-control" id="user-notes" rows="3" placeholder="What do you think?.."></textarea>
+<div class="container">
+    <form action="" id="notes-form">
+        <div class="form-group col-10 offset-1">
+            <div class="row justify-content-between">
+                <label for="user-notes">Notes:</label>
+                <input class="btn btn-info btn-sm" type="button" id="save-btn" value="Save Changes">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-10 offset-1">
+                <textarea class="form-control" id="user-notes" rows="3" placeholder="What do you think?.."></textarea>
+            </div>
+        </div>
+
+
+    </form>
+    <div class="d-flex justify-content-center row">
+        <a class="btn btn-primary btn-sm mb-5" href="/user/favorites/{{page_num}}">Back to Favorites</a>
     </div>
-    <input class="btn btn-info" type="button" id="save-btn" value="Save Changes">
-
-
-</form>
-<a class="btn btn-primary btn-sm" href="/user/favorites/{{page_num}}">Back to Favorites</a>
+</div>
 {% elif came_from == 'home' %}
-<a class="btn btn-primary btn-sm" href="/">Back to Home</a>
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary btn-sm mb-5" href="/">Back to Home</a>
+</div>
 {% elif came_from == 'search' %}
-<a class="btn btn-primary btn-sm" href="/display/results/{{page_num}}">Back to Results</a>
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary btn-sm mb-5" href="/display/results/{{page_num}}">Back to Results</a>
+</div>
 {% endif %}
 
 {% endblock %}

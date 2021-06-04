@@ -5,11 +5,12 @@
 {% block content %}
 
 <div class="container-md text-center">
-    <div class="h2 text-center">Results</div>
-    <div class="row">
+    <div class="h2 text-info text-center">Results</div>
+    <div class="results row justify-content-center">
         {% if results %}
         {% for recipe in results %}
-        <div class="card text-center col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3" style="width: 18rem;">
+        <div class="card text-center col-10 col-xs-10 offset-xs-1 col-sm-5 offset-sm-0 col-md-5 col-lg-4 col-xl-3"
+            style="width: 18rem;">
             <img src="{{recipe.image_url}}" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title drink-title" data-recipe-id="{{recipe.id}}">{{recipe.name}}</h5>
@@ -18,13 +19,13 @@
                 </h6>
                 <p class="card-text">{{ recipe.category }}</p>
                 <a href="/display/recipe/{{recipe.id}}?from=search&page_num={{cur_page}}" class="btn btn-primary">See
-                    Recipe!</a>
+                    Recipe</a>
             </div>
         </div>
         {% endfor %}
     </div>
     {% if total_pages > 0 %}
-    <div class="row">
+    <div class="row my-2">
         <div class="col-12 d-flex justify-content-center">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -35,16 +36,34 @@
                         </a>
                     </li>
                     {% endif %}
-                    {% for i in range(0, total_pages+1)%}
-                    <li class="page-item"><a class="page-link" href="{{i}}">{{i+1}}</a></li>
-                    {% endfor %}
-                    {% if cur_page != total_pages %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{cur_page+1}}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
+                    {% if total_pages <= 7 %} {% for i in range(0, total_pages+1)%} <li
+                        class="page-item{% if i == cur_page %} current{% endif %}"><a class="page-link"
+                            href="{{i}}">{{i+1}}</a></li>
+                        {% endfor %}
+                        {% else %}
+                        {% if cur_page <= 3 %} {% for i in range(0, 7)%} <li
+                            class="page-item{% if i == cur_page %} current{% endif %}"><a class="page-link"
+                                href="{{i}}">{{i+1}}</a></li>
+                            {% endfor %}
+                            {% elif ((cur_page > 3) and (total_pages - cur_page > 3)) %}
+                            {% for i in range(cur_page-3, cur_page+4)%}
+                            <li class="page-item{% if i == cur_page %} current{% endif %}"><a class="page-link"
+                                    href="{{i}}">{{i+1}}</a></li>
+                            {% endfor %}
+                            {% else %}
+                            {% for i in range(total_pages-6, total_pages+1)%}
+                            <li class="page-item{% if i == cur_page %} current{% endif %}"><a class="page-link"
+                                    href="{{i}}">{{i+1}}</a></li>
+                            {% endfor %}
+                            {% endif %}
+                            {% endif %}
+                            {% if cur_page != total_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{cur_page+1}}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
                 </ul>
             </nav>
         </div>

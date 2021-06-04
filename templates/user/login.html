@@ -3,7 +3,7 @@
 {% block title %} Login {% endblock %}
 
 {% block content %}
-<div class="container-md col-6-lg" style="max-width: 25rem;">
+<div class="d-flex container-md col-6-lg offset-lg-3 m-2 justify-content-center" style="max-width: 25rem;">
     <form id="login-form" method="POST">
         {{ form.hidden_tag() }}
 
@@ -26,7 +26,7 @@
 
         {% endfor %}
         <br>
-        <button class="btn btn-success btn-lg" type="submit">Submit</button>
+        <input class="btn btn-success btn-lg" type="submit" />
         <a href="/" class="btn btn-secondary btn-sm">Cancel</a>
     </form>
     {% endblock %}

@@ -4,25 +4,40 @@
 
 {% block content %}
 
-<div class="container justify-content-center col-lg-8">
-    <p class="h2 text-center">Welcome to Quixr!</p>
+<div class="container pl-4 pr-4 mt-2 mb-3 col-lg-8">
+    <div class="row d-flex justify-content-center">
+        <p class="h2 text-info">Welcome to Quixr!</p>
+    </div>
 
-    <p class="text-center">Quixr's mission is to help you figure out what to drink! Sometimes it can be daunting, or you
-        just want to try something new, and that's what we're here for.</p>
+    <div class="row justify-content-center">
+        <p class="text-center">Quixr's mission is to help you figure out what to drink!
+            <br> Sometimes it can be daunting, or
+            you
+            just want to try something new.
+            <br>That's what we're here for.
+        </p>
+    </div>
     <hr>
-    <p class="h4 text-center">Random recipe!</p>
-    <p>Here's a random recipe to jump-start you. Who knows? Maybe it'll wind up being your favorite...</p>
-    <div class="card text-center col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3" style="width: 18rem;">
-        <img src="{{random_recipe.image_url}}" class="card-img-top" alt="">
-        <div class="card-body">
-            <h5 class="card-title drink-title" data-recipe-id="{{random_recipe.id}}">
-                {{random_recipe.name}}
-            </h5>
-            <h6 class="card-subtitle mb-2 text-muted">Number of ingredients:
-                {{(random_recipe['ingredients']|length /2) | int}}
-            </h6>
-            <p class="card-text">{{ random_recipe.category }}</p>
-            <a href="/display/recipe/{{random_recipe.id}}?from=home" class="btn btn-primary">See Recipe!</a>
+    <div class="row d-flex justify-content-center">
+        <p class="h4">Random recipe!</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="text-center">Here's a random recipe to jump-start you. Who knows? Maybe it'll wind up being your
+            favorite...</p>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="card text-center col-10 col-sm-6 col-md-5 col-lg-4" style="width: 18rem;">
+            <img src="{{random_recipe.image_url}}" class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title drink-title" data-recipe-id="{{random_recipe.id}}">
+                    {{random_recipe.name}}
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">Number of ingredients:
+                    {{(random_recipe['ingredients']|length /2) | int}}
+                </h6>
+                <p class="card-text">{{ random_recipe.category }}</p>
+                <a href="/display/recipe/{{random_recipe.id}}?from=home" class="btn btn-primary">See Recipe!</a>
+            </div>
         </div>
     </div>
 

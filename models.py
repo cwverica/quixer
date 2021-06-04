@@ -152,6 +152,13 @@ class Recipe(db.Model):
         recipe['ingredients'] = ingredients
         return recipe
 
+    @classmethod
+    def return_recipe_lengths(cls, ids):
+        '''
+        Takes recipe id, returns a tuple with the id and name
+        '''
+        recipe_lengths = [(id, len(cls.query.filter(Recipe.id==id).first().ingredients)) for id in ids]
+        return recipe_lengths
 
 
 class User(db.Model):
