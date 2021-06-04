@@ -184,19 +184,9 @@ class User(db.Model):
         unique=True,
     )
 
-    image_url = db.Column(
-        db.Text,
-        default="/static/media/images/default-pic.png",
-    )
-
     password = db.Column(
         db.Text,
         nullable=False,
-    )
-
-    ingredients = db.relationship(
-        'Ingredient',
-        secondary='user_ingredients'
     )
 
     def __repr__(self):
