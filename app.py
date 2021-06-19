@@ -172,25 +172,22 @@ def results(page_num):
     if 'id_list' in session:
         id_list = session['id_list'] 
     else:
-        id_list = None
-
-    total_pages = 0
-    if id_list:
-        total_pages = math.ceil(len(id_list)/RESULTS_PER_PAGE) - 1
-        
+        return render_template('search_results.html', results=None, total_pages=0, cur_page=0)
     
-    if id_list:
-        index_start = page_num * RESULTS_PER_PAGE
-        if index_start >= len(id_list):
-            flash("Out of search results index")
-            return render_template('404.html') 
-        for index in range(index_start, index_start+RESULTS_PER_PAGE):
-            if index < len(id_list):
-                results.append(Recipe.get_full_recipe_from_id(id_list[index]))
-            else:
-                break
-    else:
-        results = None
+    total_pages = math.ceil(len(id_list)/RESULTS_PER_PAGE) - 1
+        
+    recipe_lengths = Recipe.return_recipe_lengths(id_list)
+    recipe_lengths.sort(key = lambda x: x[1]) 
+
+    index_start = page_num * RESULTS_PER_PAGE
+    if index_start >= len(recipe_lengths):
+        flash("Out of search results index")
+        return render_template('404.html') 
+    for index in range(index_start, index_start+RESULTS_PER_PAGE):
+        if index < len(recipe_lengths):
+            results.append(Recipe.get_full_recipe_from_id(recipe_lengths[index][0]))
+        else:
+            break
 
     return render_template('search_results.html', results=results, total_pages=total_pages, cur_page=page_num)
 

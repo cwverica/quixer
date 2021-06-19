@@ -152,6 +152,13 @@ class Recipe(db.Model):
         recipe['ingredients'] = ingredients
         return recipe
 
+    @classmethod
+    def return_recipe_lengths(cls, ids):
+        '''
+        Takes recipe id, returns a tuple with the id and name
+        '''
+        recipe_lengths = [(id, len(cls.query.filter(Recipe.id==id).first().ingredients)) for id in ids]
+        return recipe_lengths
 
 
 class User(db.Model):
@@ -177,19 +184,9 @@ class User(db.Model):
         unique=True,
     )
 
-    image_url = db.Column(
-        db.Text,
-        default="/static/media/images/default-pic.png",
-    )
-
     password = db.Column(
         db.Text,
         nullable=False,
-    )
-
-    ingredients = db.relationship(
-        'Ingredient',
-        secondary='user_ingredients'
     )
 
     def __repr__(self):

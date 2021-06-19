@@ -1,0 +1,91 @@
+
+body {
+    background-color: #2F0621;
+    color: #FAE7D0;
+}
+
+
+
+
+
+
+div.h2 {
+
+    color: #91E0F3;
+}
+
+a.btn-primary{
+    background-color: #91E0F3;
+    font-weight: bolder;
+    color: #2F0621;
+    border: none;
+}
+
+a.btn-primary:hover {
+    background-color: #ECF974;
+    color: #2F0621;
+}
+
+a.btn-secondary {
+    border-color: #B54646;
+    background-color: #2F0621;
+    color: #B54646;
+    font-weight: bolder;
+}
+
+a.btn-secondary:hover {
+    background-color: #B54646;
+    color: #2F0621;
+}
+
+input.btn {
+    background-color: #ECF974;
+    font-weight: bolder;
+    color: #2F0621;
+}
+
+input.btn:hover {
+    background-color: #B54646;
+    border: none;
+}
+
+
+div.card {
+    background-color: #2F0621;
+    border-color: #ECF974;
+}
+
+
+a.page-link {
+    background-color: #4b1037;
+    color: #ECF974;
+}
+
+li.current > a.page-link {
+    background-color: #2F0621;
+    color: #FAE7D0;
+}
+
+nav.navbar {
+    background-color: #4b1037!important;
+    color: #ECF974;
+}
+nav.navbar * {
+    background-color: #4b1037;
+    color: #ECF974;
+}
+
+div.results {
+    margin: 0 5px;
+}
+
+div.results > div.card {
+    padding: 0 5px;
+    margin: 1px;
+}
+/* 
+#D16F00
+#CAE000
+#ECF974
+#B54646
+*/
