@@ -17,6 +17,7 @@ Getting started in a flash, isn't as quick.
 - Sign up to be a patreon supporter of [thecocktaildb](https://www.thecocktaildb.com/) to get an api key (recommended, see below) 
 or 
 - install the provided database file (swap username with your username)
+ > createdb quixr
  > psql -U username quixr < dbexport.pgsql 
 - create a virtual environment and install the requirements.txt
  > python -m venv venv  (or python3 depending on your system)

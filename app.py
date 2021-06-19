@@ -12,7 +12,7 @@ from models import UserIngredient, RecipeIngredient, Favorite
 try:
     from keys.secret_key import SECRET_KEY
 except:
-    pass
+    SECRET_KEY = "This_is_sekret"
 
 CURR_USER_KEY = "curr_user"
 

@@ -255,6 +255,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.favorites (user_id, recipe_id, user_notes, user_rating) FROM stdin;
+1	14782	I like the name.\nA lot.\nReally, it's a great name.\nBUT.... I may also like the drink\nQuite a bit.	\N
+1	11129	The picture doesn't match the drink.\nAlso, I'd rather use simple syrup than powdered sugar.\nDunno why they call it a Boston Sour. This is a whiskey sour.	\N
+1	17251	Such a good drink. It's a shame so many people hate Campari. It's a great digestif.	\N
+1	15997		\N
+1	178310	A bit tart. But not bad.	\N
+2	178354	I love the color of this! Can't wait to try this.	\N
+2	14364	Okay IDK about this drink but I do want to drink out of this bowl. 	\N
+2	178356	\N	\N
 \.
 
 
@@ -3806,6 +3814,8 @@ COPY public.user_tools (user_id, tool_id) FROM stdin;
 --
 
 COPY public.users (id, email, username, image_url, password) FROM stdin;
+1	JaysFirstSon@webify.com	json	/static/media/images/default-pic.png	$2b$12$vqE7SGRwpw4kW27yucGta.te6VXw0usO7OMJ6QkqhKjWFjc1yCure
+2	l.rnjoy@gmail.com	lrnjoy	/static/media/images/default-pic.png	$2b$12$PGXxGVvQ2P7Pz7YF1yQLP.qDG9/27LZiikcJ3p8dW93NoDwLeLa.y
 \.
 
 
@@ -3834,7 +3844,7 @@ SELECT pg_catalog.setval('public.tools_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: cwverica
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 2, true);
 
 
 --
