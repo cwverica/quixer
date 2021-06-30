@@ -6,8 +6,8 @@
 
 <div class="container-md text-center mb-3">
     <div class="h2 text-info text-center">Results</div>
+    {% if results %}
     <div class="results row justify-content-center">
-        {% if results %}
         {% for recipe in results %}
         <div class="card text-center col-10 col-xs-10 offset-xs-1 col-sm-5 offset-sm-0 col-md-4 col-lg-3">
             <img src="{{recipe.image_url}}" class="card-img-top" alt="">
@@ -70,6 +70,7 @@
     {% endif %}
     {% else %}
     <h3 class="text-warning">No Results Found</h3>
+    <br>
     <a class="btn btn-primary btn-sm" href="/search">Back to Search</a>
     {% endif %}
 

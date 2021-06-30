@@ -168,7 +168,7 @@ def results(page_num):
     RESULTS_PER_PAGE = 12
     results = []
         
-    if 'id_list' in session:
+    if bool(session['id_list']):
         id_list = session['id_list'] 
     else:
         return render_template('search_results.html', results=None, total_pages=0, cur_page=0)
