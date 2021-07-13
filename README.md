@@ -17,6 +17,7 @@ Getting started in a flash, you have two options.
 1. Sign up to be a patreon supporter of [thecocktaildb](https://www.thecocktaildb.com/) to get an api key (recommended) 
 or 
 <<<<<<< HEAD
+<<<<<<< HEAD
 - install the provided database file (swap username with your username)
  > createdb quixr
  > psql -U username quixr < dbexport.pgsql 
@@ -26,6 +27,9 @@ or
 - run the app
  > flask run
 - access at localhost:5000
+=======
+2. install the provided database file (swap username with your username)
+>>>>>>> cfa5a04100ff264fd10c55bbfb4fdd2aee1e132c
 =======
 2. install the provided database file (swap username with your username)
 >>>>>>> cfa5a04100ff264fd10c55bbfb4fdd2aee1e132c
