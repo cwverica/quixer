@@ -18,6 +18,9 @@ Getting started in a flash, you have two options.
 or 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
 - install the provided database file (swap username with your username)
  > createdb quixr
  > psql -U username quixr < dbexport.pgsql 
@@ -30,9 +33,12 @@ or
 =======
 2. install the provided database file (swap username with your username)
 >>>>>>> cfa5a04100ff264fd10c55bbfb4fdd2aee1e132c
+<<<<<<< HEAD
 =======
 2. install the provided database file (swap username with your username)
 >>>>>>> cfa5a04100ff264fd10c55bbfb4fdd2aee1e132c
+=======
+>>>>>>> master
 
 ### *Option 1: Becoming a patreon supporter*
 Good choice. We should all be supporting one another. Also, you'll always get the most up
