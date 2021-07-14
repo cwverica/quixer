@@ -12,7 +12,7 @@ from models import UserIngredient, RecipeIngredient, Favorite
 try:
     from keys.secret_key import SECRET_KEY
 except:
-    pass
+    SECRET_KEY = "This_is_sekret"
 
 CURR_USER_KEY = "curr_user"
 
@@ -22,11 +22,11 @@ app = Flask(__name__)
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgres:///quixr'))
+    os.environ.get('DATABASE_URL', 'postgresql:///quixr'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = os.environ.get('DEBUG_TB_INTERCEPT_REDIRECTS', True)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', SECRET_KEY)
 toolbar = DebugToolbarExtension(app)
 
@@ -86,8 +86,7 @@ def signup():
             user = User.signup(
                 username=form.username.data,
                 password=form.password.data,
-                email=form.email.data,
-                image_url=form.image_url.data or User.image_url.default.arg,
+                email=form.email.data
             )
             db.session.commit()
 
@@ -169,7 +168,7 @@ def results(page_num):
     RESULTS_PER_PAGE = 12
     results = []
         
-    if 'id_list' in session:
+    if bool(session['id_list']):
         id_list = session['id_list'] 
     else:
         return render_template('search_results.html', results=None, total_pages=0, cur_page=0)

@@ -9,8 +9,7 @@
     <div class="results row justify-content-center">
         {% if favorites %}
         {% for recipe in favorites %}
-        <div class="card text-center col-10 col-xs-10 offset-xs-1 col-sm-5 offset-sm-0 col-md-4 col-lg-3"
-            style="width: 18rem;">
+        <div class="card text-center col-10 col-xs-10 offset-xs-1 col-sm-5 offset-sm-0 col-md-4 col-lg-3">
             <img src="{{recipe.image_url}}" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title drink-title" data-recipe-id="{{recipe.id}}">{{recipe.name}}</h5>

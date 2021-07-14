@@ -155,7 +155,11 @@ class Recipe(db.Model):
     @classmethod
     def return_recipe_lengths(cls, ids):
         '''
-        Takes recipe id, returns a tuple with the id and name
+        Takes an array of recipe ids, and returns an array of tuples. Each tuple 
+        has the format of (recipe id, number of ingredients).
+
+        This function is a helper function, it's return is used to sort recipes
+         by "length".
         '''
         recipe_lengths = [(id, len(cls.query.filter(Recipe.id==id).first().ingredients)) for id in ids]
         return recipe_lengths
@@ -194,7 +198,7 @@ class User(db.Model):
 
 
     @classmethod
-    def signup(cls, username, email, password, image_url):
+    def signup(cls, username, email, password):
         """Sign up user.
 
         Hashes password and adds user to system.
@@ -205,8 +209,7 @@ class User(db.Model):
         user = User(
             username=username,
             email=email,
-            password=hashed_pwd,
-            image_url=image_url,
+            password=hashed_pwd
         )
 
         db.session.add(user)

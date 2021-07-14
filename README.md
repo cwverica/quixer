@@ -24,6 +24,7 @@ or
 
 2. Install the provided database file (swap username with your username).
 
+
 ### *Option 1: Becoming a patreon supporter*
 
 Good choice. We should all be supporting one another. Also, you'll always get the most up
