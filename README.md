@@ -16,6 +16,29 @@ It then allows a user to input an ingredient to search for and returns a list of
 
 https://quixr.herokuapp.com/
 
+### Tech Used
+
+#### Front-End:
+- Vanilla JS
+- JQuery
+- WTForms
+- Bootstrap
+- JQuery
+- CSS
+- Font Awesome
+
+#### Back-End
+- Python
+- Postgresql
+- SQLAlchemy
+- Flask
+- WTForms
+- BCrypt
+
+#### Server
+- Heroku
+- Nginx
+
 ## QuickStart
 Getting started in a flash, you have two options.
 1. Sign up to be a Patreon supporter of [thecocktaildb](https://www.thecocktaildb.com/) to get an API key (recommended).
@@ -80,6 +103,15 @@ Access at http://127.0.0.1:5000/
  > flask run
 
 Access at http://127.0.0.1:5000/ or set it up to be hosted.
+
+### Testing
+
+There are some basic tests. I will add some more going forward, so check back from time to time.
+
+To run the tests:
+- Activate your virtual environment
+- Run Python's unittest module
+> python -m unittest
 
 ---
 
