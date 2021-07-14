@@ -23,7 +23,6 @@ https://quixr.herokuapp.com/
 - JQuery
 - WTForms
 - Bootstrap
-- JQuery
 - CSS
 - Font Awesome
 
