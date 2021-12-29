@@ -73,9 +73,9 @@ database and naming it 'quixr'.
 Access at http://127.0.0.1:5000/
 
 ### *Option 2: Using the provided database file*
-1. Load the preloaded database in
+1. Preload the database in
 
- > psql -U *postgres* quixr < dbexport.pgsql 
+ > psql -U *postgres* quixr < dbexport.pgsql [^1]
 
 `postgres` is usually the default username that installs with postgres DB. If you've set up your postgres to use a different username, insert it here.
 
@@ -102,6 +102,7 @@ Access at http://127.0.0.1:5000/
 
 Access at http://127.0.0.1:5000/ or set it up to be hosted.
 
+[^1]: I have taken this file out. If you send a request to me, I will get it to you.
 ### Testing
 
 There are some basic tests. I will add some more going forward, so check back from time to time.
