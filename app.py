@@ -18,11 +18,15 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 
+try:
+    from keys.database import DB_URL
+except:
+    DB_URL = 'postgresql:///quixr'
 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///quixr'))
+    os.environ.get('DATABASE_URL', DB_URL))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -171,7 +175,8 @@ def results(page_num):
     if bool(session['id_list']):
         id_list = session['id_list'] 
     else:
-        return render_template('search_results.html', results=None, total_pages=0, cur_page=0)
+        return render_template('search_results.html', results=None, 
+            total_pages=0, cur_page=0)
     
     total_pages = math.ceil(len(id_list)/RESULTS_PER_PAGE) - 1
         
@@ -188,7 +193,8 @@ def results(page_num):
         else:
             break
 
-    return render_template('search_results.html', results=results, total_pages=total_pages, cur_page=page_num)
+    return render_template('search_results.html', results=results, 
+        total_pages=total_pages, cur_page=page_num)
 
 @app.route('/display/recipe/<int:id>')
 def recipe(id):
@@ -200,7 +206,8 @@ def recipe(id):
         return render_template('404.html')
     recipe = Recipe.get_full_recipe_from_id(id)
 
-    return render_template('display_recipe.html', recipe=recipe, came_from=came_from, page_num=page_num)
+    return render_template('display_recipe.html', recipe=recipe, 
+        came_from=came_from, page_num=page_num)
 
 
 
@@ -246,7 +253,8 @@ def favorites_list(page_num):
         favorites = None
 
 
-    return render_template('user/favorites.html', favorites=favorites, total_pages=total_pages, cur_page=page_num)
+    return render_template('user/favorites.html', favorites=favorites, 
+        total_pages=total_pages, cur_page=page_num)
 
 @app.route('/user/favorite/<int:recipe_id>')
 def add_favorite(recipe_id):
@@ -255,7 +263,8 @@ def add_favorite(recipe_id):
         return redirect('/user/login')
 
     fave_obj = Favorite.query\
-    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id)\
+    .first()
     if fave_obj:
         return 'False'
     else:
@@ -273,7 +282,8 @@ def remove_favorite(recipe_id):
         return redirect('/user/login')
 
     fave_obj = Favorite.query\
-    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id)\
+    .first()
     if fave_obj:
         db.session.delete(fave_obj)
         db.session.commit()
@@ -307,7 +317,8 @@ def update_notes(recipe_id):
 
     notes = request.json.get('notes')
     fave_obj = Favorite.query\
-    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id).first()
+    .filter(Favorite.user_id==session[CURR_USER_KEY], Favorite.recipe_id==recipe_id)\
+    .first()
 
     if fave_obj:
         fave_obj.user_notes = notes

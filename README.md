@@ -23,7 +23,8 @@ or
 >>>>>>> master
 - install the provided database file (swap username with your username)
  > createdb quixr
- > psql -U username quixr < dbexport.pgsql 
+ > psql -U username quixr < dbexport.pgsql
+	(note: dbexport.pgsql is no longer included in repo. send me a request and I'll send it to you) 
 - create a virtual environment and install the requirements.txt
  > python -m venv venv  (or python3 depending on your system)
  > pip install -r requirements.txt

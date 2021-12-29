@@ -14,7 +14,7 @@ MAX_INGREDIENTS = 15 # API provides data slots for up to 15 ingredients,
 
 
 def do_ingredients_exist(drink):
-    for i in range(1,16):
+    for i in range(1, MAX_INGREDIENTS + 1): #ingredient list is 1-indexed
         ingredient = drink[f'strIngredient{i}']
         if not ingredient:
             return True
@@ -24,7 +24,7 @@ def do_ingredients_exist(drink):
     return True
 
 def create_ingredients(drink):
-    for i in range(1,16):
+    for i in range(1, MAX_INGREDIENTS + 1): #ingredient list is 1-indexed
         ingredient = drink[f'strIngredient{i}']
         if ingredient:
             exists = Ingredient.query.filter(Ingredient.name == ingredient).first()
